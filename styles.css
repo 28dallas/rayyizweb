@@ -110,8 +110,41 @@ a:hover {
 .hero-content h1 {
     font-size: 5rem;
     margin-bottom: 0.5rem;
-    color: #d4af37;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    background: linear-gradient(45deg, #d4af37, #f4d03f, #d4af37, #b8941f);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+    position: relative;
+}
+
+.hero-content h1::before {
+    content: 'DJ RAYYIZ';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(45deg, #d4af37, #f4d03f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: blur(2px);
+    z-index: -1;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+@keyframes glow {
+    from { opacity: 0.5; transform: scale(1.02); }
+    to { opacity: 0.8; transform: scale(1.05); }
 }
 
 .hero-content p {
@@ -173,6 +206,38 @@ section.fade-in {
     width: 100%;
     border-radius: 10px;
     border: 2px solid #d4af37;
+}
+
+.personal-intro {
+    background: linear-gradient(135deg, #1a1a1a, #111);
+    padding: 2rem;
+    border-radius: 15px;
+    border-left: 4px solid #d4af37;
+    margin: 2rem 0;
+    position: relative;
+}
+
+.personal-intro h3 {
+    color: #d4af37;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.personal-intro blockquote {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #f0f0f0;
+    border-left: 3px solid #d4af37;
+    padding-left: 1rem;
+    margin: 1rem 0 0 0;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.personal-intro strong {
+    color: #d4af37;
 }
 
 /* Music */
@@ -961,6 +1026,29 @@ footer {
         flex-direction: column;
         gap: 0.5rem;
     }
+    
+    .audio-controls {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .progress-container {
+        order: 3;
+        width: 100%;
+    }
+    
+    .volume-control {
+        justify-content: center;
+    }
+    
+    .audio-source-options {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
 
     #video h2 {
         font-size: 2.2rem;
@@ -1033,6 +1121,10 @@ footer {
 
     h2 {
         font-size: 2rem;
+    }
+    
+    .add-track-form {
+        padding: 1rem;
     }
     
     #video h2 {
@@ -1128,6 +1220,97 @@ footer {
     to { transform: rotate(360deg); }
 }
 
+/* Music Admin Panel */
+.music-admin {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.admin-panel {
+    background: #111;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-top: 1rem;
+    border: 1px solid #d4af37;
+}
+
+.add-track-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.add-track-form h3 {
+    color: #d4af37;
+    margin-bottom: 1.5rem;
+}
+
+.add-track-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background: #222;
+    color: #fff;
+}
+
+.audio-source-options {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.audio-source-options label {
+    color: #ccc;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.btn-secondary {
+    background: #333;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Enhanced Track Styles */
+.track {
+    position: relative;
+    background: #111;
+    border-radius: 15px;
+    padding: 1rem;
+    border: 1px solid #333;
+    transition: all 0.3s ease;
+}
+
+.track:hover {
+    border-color: #d4af37;
+    transform: translateY(-5px);
+}
+
+.delete-track {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4444;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
 /* Audio Player Styles */
 .audio-player {
     background: linear-gradient(135deg, #111, #222);
@@ -1141,6 +1324,7 @@ footer {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .play-pause-btn {
@@ -1167,6 +1351,7 @@ footer {
     border-radius: 3px;
     cursor: pointer;
     position: relative;
+    min-width: 100px;
 }
 
 .progress-bar {
@@ -1182,6 +1367,56 @@ footer {
     font-size: 0.9rem;
     min-width: 80px;
     text-align: right;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 100px;
+}
+
+.volume-control i {
+    color: #d4af37;
+    font-size: 0.9rem;
+}
+
+.volume-slider {
+    width: 60px;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #d4af37;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: #d4af37;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+}
+
+.youtube-player {
+    margin: 1rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #d4af37;
+}
+
+.youtube-player iframe {
+    border-radius: 10px;
 }
 
 /* Enhanced Button Styles */
@@ -1421,6 +1656,34 @@ footer {
 }
 
 .genre-card i {
+    font-size: 2.5rem;
+    color: #d4af37;
+    margin-bottom: 1rem;
+}
+
+/* Projects Section */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.project-card {
+    background: #111;
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    border-left: 4px solid #d4af37;
+    transition: all 0.3s ease;
+}
+
+.project-card:hover {
+    background: #1a1a1a;
+    transform: translateY(-5px);
+}
+
+.project-card i {
     font-size: 2.5rem;
     color: #d4af37;
     margin-bottom: 1rem;

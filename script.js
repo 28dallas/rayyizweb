@@ -568,5 +568,196 @@ if (document.readyState === 'loading') {
     preloadResources();
 }
 
-// Make toggleChat function globally available
+// Music Management Functions
+function toggleMusicAdmin() {
+    const adminPanel = document.getElementById('admin-panel');
+    const deleteButtons = document.querySelectorAll('.delete-track');
+    
+    if (adminPanel.style.display === 'none' || !adminPanel.style.display) {
+        adminPanel.style.display = 'block';
+        deleteButtons.forEach(btn => btn.style.display = 'block');
+    } else {
+        adminPanel.style.display = 'none';
+        deleteButtons.forEach(btn => btn.style.display = 'none');
+    }
+}
+
+function addTrack() {
+    const title = document.getElementById('track-title').value;
+    const imageFile = document.getElementById('track-image').files[0];
+    const audioSource = document.querySelector('input[name="audio-source"]:checked').value;
+    const audioFile = document.getElementById('track-audio-file').files[0];
+    const audioUrl = document.getElementById('track-audio-url').value;
+    
+    if (!title) {
+        alert('Please enter a track title');
+        return;
+    }
+    
+    if (audioSource === 'file' && !audioFile) {
+        alert('Please select an audio file');
+        return;
+    }
+    
+    if (audioSource === 'url' && !audioUrl) {
+        alert('Please enter an audio URL');
+        return;
+    }
+    
+    const musicGrid = document.getElementById('music-grid');
+    const trackDiv = document.createElement('div');
+    trackDiv.className = 'track';
+    
+    // Handle image
+    let imageSrc = 'img/dj/IMG_6592.JPG'; // Default image
+    if (imageFile) {
+        imageSrc = URL.createObjectURL(imageFile);
+    }
+    
+    // Handle audio source
+    let audioSrc = '';
+    if (audioSource === 'file' && audioFile) {
+        audioSrc = URL.createObjectURL(audioFile);
+    } else if (audioSource === 'url') {
+        audioSrc = audioUrl;
+    }
+    
+    trackDiv.innerHTML = `
+        <img src="${imageSrc}" alt="${title} Track Cover">
+        <h3>${title}</h3>
+        <div class="audio-player" data-track="${title.toLowerCase().replace(/\s+/g, '-')}">
+            <div class="audio-controls">
+                <button class="play-pause-btn" aria-label="Play/Pause">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="time-display">0:00 / 0:00</div>
+                <div class="volume-control">
+                    <i class="fas fa-volume-up"></i>
+                    <input type="range" class="volume-slider" min="0" max="100" value="50">
+                </div>
+            </div>
+            <audio preload="metadata">
+                <source src="${audioSrc}" type="${audioFile ? audioFile.type : 'audio/mpeg'}">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+        <button class="delete-track" onclick="deleteTrack(this)">×</button>
+    `;
+    
+    musicGrid.appendChild(trackDiv);
+    
+    // Initialize audio player for new track
+    const newPlayer = trackDiv.querySelector('.audio-player');
+    new AudioPlayer(newPlayer);
+    
+    // Initialize volume control
+    initVolumeControl(newPlayer);
+    
+    // Clear form
+    document.getElementById('track-title').value = '';
+    document.getElementById('track-image').value = '';
+    document.getElementById('track-audio-file').value = '';
+    document.getElementById('track-audio-url').value = '';
+    
+    // Hide admin panel
+    toggleMusicAdmin();
+    
+    alert('Track added successfully!');
+}
+
+function deleteTrack(button) {
+    if (confirm('Are you sure you want to delete this track?')) {
+        const track = button.closest('.track');
+        const audio = track.querySelector('audio');
+        
+        // Stop audio if playing
+        if (!audio.paused) {
+            audio.pause();
+        }
+        
+        // Revoke object URLs to free memory
+        const audioSrc = audio.querySelector('source').src;
+        const imageSrc = track.querySelector('img').src;
+        
+        if (audioSrc.startsWith('blob:')) {
+            URL.revokeObjectURL(audioSrc);
+        }
+        if (imageSrc.startsWith('blob:')) {
+            URL.revokeObjectURL(imageSrc);
+        }
+        
+        track.remove();
+    }
+}
+
+// Enhanced Audio Player with Volume Control
+function initVolumeControl(playerContainer) {
+    const audio = playerContainer.querySelector('audio');
+    const volumeSlider = playerContainer.querySelector('.volume-slider');
+    const volumeIcon = playerContainer.querySelector('.volume-control i');
+    
+    if (!volumeSlider || !audio) return;
+    
+    // Set initial volume
+    audio.volume = volumeSlider.value / 100;
+    
+    volumeSlider.addEventListener('input', (e) => {
+        const volume = e.target.value / 100;
+        audio.volume = volume;
+        
+        // Update volume icon
+        if (volume === 0) {
+            volumeIcon.className = 'fas fa-volume-mute';
+        } else if (volume < 0.5) {
+            volumeIcon.className = 'fas fa-volume-down';
+        } else {
+            volumeIcon.className = 'fas fa-volume-up';
+        }
+    });
+    
+    // Click volume icon to mute/unmute
+    volumeIcon.addEventListener('click', () => {
+        if (audio.volume > 0) {
+            audio.volume = 0;
+            volumeSlider.value = 0;
+            volumeIcon.className = 'fas fa-volume-mute';
+        } else {
+            audio.volume = 0.5;
+            volumeSlider.value = 50;
+            volumeIcon.className = 'fas fa-volume-up';
+        }
+    });
+}
+
+// Initialize volume controls for existing players
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.audio-player').forEach(player => {
+        initVolumeControl(player);
+    });
+    
+    // Handle audio source selection
+    const audioSourceRadios = document.querySelectorAll('input[name="audio-source"]');
+    const audioFileInput = document.getElementById('track-audio-file');
+    const audioUrlInput = document.getElementById('track-audio-url');
+    
+    audioSourceRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            if (e.target.value === 'file') {
+                audioFileInput.style.display = 'block';
+                audioUrlInput.style.display = 'none';
+            } else {
+                audioFileInput.style.display = 'none';
+                audioUrlInput.style.display = 'block';
+            }
+        });
+    });
+});
+
+// Make functions globally available
 window.toggleChat = toggleChat;
+window.toggleMusicAdmin = toggleMusicAdmin;
+window.addTrack = addTrack;
+window.deleteTrack = deleteTrack;
