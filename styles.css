@@ -258,19 +258,52 @@ section.fade-in {
     border-radius: 10px;
 }
 
-.play-button {
-    background-color: #d4af37;
-    color: #000;
-    border: none;
-    padding: 0.5rem 1rem;
+.youtube-link {
+    display: block;
+    position: relative;
     margin-top: 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
 
-.play-button:hover {
-    background-color: #b8941f;
+.youtube-link:hover {
+    transform: scale(1.02);
+}
+
+.youtube-thumbnail {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: opacity 0.3s ease;
+}
+
+.youtube-link:hover .youtube-thumbnail {
+    opacity: 0.8;
+}
+
+.play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(212, 175, 55, 0.9);
+    color: #000;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.youtube-link:hover .play-overlay {
+    background: #d4af37;
+    transform: translate(-50%, -50%) scale(1.1);
 }
 
 /* Enhanced Events Section */
@@ -1417,6 +1450,96 @@ footer {
 
 .youtube-player iframe {
     border-radius: 10px;
+}
+
+/* Event Gallery Styles */
+.event-gallery-section {
+    margin: 3rem 0;
+}
+
+.event-gallery-section h3 {
+    color: #d4af37;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.event-gallery-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: #d4af37;
+}
+
+.event-gallery-slider {
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.event-gallery-container {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.event-gallery-slide {
+    min-width: 100%;
+    position: relative;
+}
+
+.event-gallery-slide img {
+    width: 100%;
+    height: 500px;
+    object-fit: contain;
+    display: block;
+    background: #000;
+    border: 8px solid #d4af37;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+}
+
+.gallery-slide-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.9), rgba(184, 148, 31, 0.9));
+    border: none;
+    color: #000;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.gallery-slide-btn:hover {
+    background: linear-gradient(135deg, #d4af37, #b8941f);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 12px 35px rgba(212, 175, 55, 0.4);
+}
+
+.gallery-slide-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.gallery-slide-btn.prev-btn {
+    left: 30px;
+}
+
+.gallery-slide-btn.next-btn {
+    right: 30px;
 }
 
 /* Enhanced Button Styles */

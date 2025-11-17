@@ -366,6 +366,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize Newsletter
     initNewsletter();
+
+    // Initialize Event Gallery
+    initEventGallery();
 });
 
 // Stats Counter Animation
@@ -411,8 +414,10 @@ function initCalendar() {
     
     if (!currentMonthElement || !calendarGrid) return;
     
-    let currentDate = new Date();
-    const bookedDates = [5, 12, 18, 25];
+    let currentDate = new Date(2025, 11, 1); // Start with December 2025
+    const bookedDatesByMonth = {
+        '2025-12': [13, 20, 31] // December 2025 booked dates
+    };
     const pendingDates = [8, 15, 22];
     
     function renderCalendar() {
@@ -448,7 +453,10 @@ function initCalendar() {
             const dayElement = document.createElement('div');
             dayElement.textContent = day;
             dayElement.className = 'calendar-day';
-            
+
+            const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
+            const bookedDates = bookedDatesByMonth[monthKey] || [];
+
             if (bookedDates.includes(day)) {
                 dayElement.classList.add('booked');
             } else if (pendingDates.includes(day)) {
@@ -456,7 +464,7 @@ function initCalendar() {
             } else {
                 dayElement.classList.add('available');
             }
-            
+
             calendarGrid.appendChild(dayElement);
         }
     }
@@ -513,18 +521,70 @@ function initTestimonials() {
 // Newsletter Subscription
 function initNewsletter() {
     const newsletterForm = document.querySelector('.newsletter-form');
-    
+
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = newsletterForm.querySelector('input[type="email"]').value;
-            
+
             if (email) {
                 alert('Thank you for subscribing!');
                 newsletterForm.reset();
             }
         });
     }
+}
+
+// Event Gallery Slider
+function initEventGallery() {
+    const galleryContainer = document.querySelector('.event-gallery-container');
+    const gallerySlides = document.querySelectorAll('.event-gallery-slide');
+    const prevBtn = document.querySelector('.gallery-slide-btn.prev-btn');
+    const nextBtn = document.querySelector('.gallery-slide-btn.next-btn');
+
+    if (!galleryContainer || gallerySlides.length === 0) return;
+
+    let currentSlide = 0;
+    const totalSlides = gallerySlides.length;
+
+    function updateGallery() {
+        galleryContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        updateGallery();
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        updateGallery();
+    }
+
+    // Event listeners
+    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+
+    // Auto-play slideshow
+    let autoPlay = setInterval(nextSlide, 2500);
+
+    // Pause auto-play on hover
+    const gallerySlider = document.querySelector('.event-gallery-slider');
+    if (gallerySlider) {
+        gallerySlider.addEventListener('mouseenter', () => {
+            clearInterval(autoPlay);
+        });
+
+        gallerySlider.addEventListener('mouseleave', () => {
+            autoPlay = setInterval(nextSlide, 4000);
+        });
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+    });
 }
 
 // WhatsApp Chat Widget
